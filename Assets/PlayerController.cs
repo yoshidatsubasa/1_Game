@@ -20,11 +20,15 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveDirection;
 
     public Slider slider;
+    public Slider slider2;
+
+    private bool isDelayedDecreasing = false; // 遅延減少中かどうかを示すフラグ
 
     int coinCount;
 
     [SerializeField]
     GameObject boostUI;
+
 
     void Start()
     {
@@ -35,7 +39,12 @@ public class PlayerController : MonoBehaviour
         Application.targetFrameRate = 60;
 
         slider.value = 5;
+        slider2.value = 5;
 
+
+        //マウスでクリックできないようにする
+        slider.interactable = false;
+        slider2.interactable = false;
     }
 
    
@@ -82,7 +91,8 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator SpeedUp()
     {
-        power = 15;
+
+        power = 10;
         yield return new WaitForSeconds(3.0f);
         power = 5;
         boostUI.SetActive(false);
@@ -126,15 +136,41 @@ public class PlayerController : MonoBehaviour
         {
             jampFlag = false;
         }
-        if (collision.gameObject.name == "Red")
+        if (collision.gameObject.name == "Red" && !isDelayedDecreasing)
         {
-            slider.value--;
+            int damage = 1;                           //一回のダメージ
+            slider.value-=damage;　　　　　　　　　　 //即座に減少
+            StartCoroutine(DelayedSliderDecrease(damage));  //遅れて減少 
+
+            PlayerEffect flickerScript = GetComponent<PlayerEffect>();
+            if (flickerScript != null)
+            {
+                flickerScript.StartFlicker();
+            }
         }
         
 
     }
 
+    private System.Collections.IEnumerator DelayedSliderDecrease(int damage)
+    {
+        float decreaseDuration = 1.0f; // 減少時間（秒）
+        float startTime = Time.time;
+        float startValue = slider2.value;
 
-   
+        isDelayedDecreasing = true; // 遅延減少中に設定
+
+        while (Time.time - startTime < decreaseDuration && damage > 0)
+        {
+            float currentTime = Time.time - startTime;
+            float decreaseAmount = Mathf.Lerp(startValue, startValue - damage, currentTime / decreaseDuration);
+            slider2.value = Mathf.Max(0, decreaseAmount); // スライダーの値を0未満にならないように調整
+            yield return null;
+        }
+
+        slider2.value = slider.value; // slider2の値を即座に減少したスライダーの値に合わせる
+        isDelayedDecreasing = false; // 遅延減少終了
+    }
+
 
 }

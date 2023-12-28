@@ -19,13 +19,13 @@ public class Coincounter2 : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" && !isGet)
         {
             playerController.AddCoinCount();
-            Destroy(gameObject);
+            //Destroy(gameObject);
 
             isGet = true;
-
+            transform.position += Vector3.up * 0.5f;
 
         }
     }

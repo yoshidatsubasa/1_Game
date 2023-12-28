@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 using UnityEngine.UI;
 
 public class Goal : MonoBehaviour
@@ -19,13 +18,17 @@ public class Goal : MonoBehaviour
     int stageCoinNum;
     int coinCount;
 
-
+    [SerializeField] Font customFont; //カスタムフォント
 
 
     void Start()
     {
         // ステージ内のコインの枚数を取得
         stageCoinNum = GameObject.FindGameObjectsWithTag("Coin").Length;
+
+        //カスタムフォントを適用する
+        coinNumText.font = customFont;
+        resultCoinText.font = customFont;
 
     }
     private void OnCollisionEnter(Collision collision)

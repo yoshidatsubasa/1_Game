@@ -22,13 +22,14 @@ public class Coincounter : MonoBehaviour
   
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag=="Player")
+        if(other.gameObject.tag=="Player" && !isGet)
         {
             playerController.AddCoinCount();
-            Destroy(gameObject);
+            //Destroy(gameObject);
             
 
             isGet = true;
+            transform.position += Vector3.up * 0.5f;
         }
     }
 
@@ -37,7 +38,7 @@ public class Coincounter : MonoBehaviour
         coinCount = coinCount + 1;
         Debug.Log("CoinCount;" + coinCount);
 
-        textComponent.text = "X" + coinCount;
+        textComponent.text = "x" + coinCount;
     }
 
     public static int getscore()
@@ -59,6 +60,7 @@ public class Coincounter : MonoBehaviour
         // älìæå„
         if (isGet)
         {
+
             // ëfëÅÇ≠âÒì]
             transform.Rotate(Vector3.up * speed * 10f * Time.deltaTime, Space.World);
 

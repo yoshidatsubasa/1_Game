@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 using UnityEngine.UI;
 
 public class Goal2 : MonoBehaviour
@@ -14,12 +13,16 @@ public class Goal2 : MonoBehaviour
     Text coinNumText, resultCoinText;
 
     private PlayerController ball;
+   
+    [SerializeField] private GameObject pausePanel;
+   
     private TimeCounter time;
     public GameObject selectButtan;
     public GameObject titleButtan;
     int stageCoinNum;
     int coinCount;
 
+    //[SerializeField] Font customFont; //カスタムフォント
 
 
 
@@ -28,6 +31,10 @@ public class Goal2 : MonoBehaviour
         // ステージ内のコインの枚数を取得
         stageCoinNum = GameObject.FindGameObjectsWithTag("Coin").Length;
 
+        ////カスタムフォントを適用する
+        //coinNumText.font = customFont;
+        //resultCoinText.font = customFont;
+
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -35,19 +42,21 @@ public class Goal2 : MonoBehaviour
         {
             coinCount = Coincounter.getscore();
 
-            // ポイント
+            
             // Ballの動きを司るスクリプトをオフにする。
             ball = collision.gameObject.GetComponent<PlayerController>();
             ball.enabled = false;
 
 
-            // ポイント
+           
             // ２秒後にボールが動けるようにする。
             Invoke("StopOff", 2.0f);
 
             Debug.Log("ゴール");
 
             Time.timeScale = 0;
+
+            pausePanel.SetActive(false);
 
             selectButtan.SetActive(true);
 

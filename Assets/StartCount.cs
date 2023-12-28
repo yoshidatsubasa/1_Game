@@ -12,6 +12,7 @@ public class StartCount : MonoBehaviour
     public Text timeText;
     public Text CountText;
     public Text CountText2;
+    public Text CountText3;
     public float totaltime = 10.0f;
     float retTime;
     float countdown = 4f;
@@ -19,6 +20,8 @@ public class StartCount : MonoBehaviour
     new public Rigidbody rigidbody;
 
     public float jumppower = 5;
+
+  
 
     void Start()
     {
@@ -37,6 +40,7 @@ public class StartCount : MonoBehaviour
             countdown -= Time.deltaTime;
             count = (int)countdown;
             CountText.text = count.ToString();
+            CountText3.text = "時間内にゴール旗を目指せ！";
             rigidbody.velocity = Vector3.zero;
             rigidbody.velocity = Vector3.up * jumppower;
         }
@@ -45,6 +49,7 @@ public class StartCount : MonoBehaviour
            //pausePanel.SetActive(false);
             CountText.text = "";
             CountText2.text = "Start!!";
+            CountText3.text = "";
             totaltime -= Time.deltaTime;
             retTime = (float)totaltime;
             timeText.text = retTime.ToString("f1");
@@ -57,6 +62,12 @@ public class StartCount : MonoBehaviour
         if(CountText2.text=="Start!!")
         {
             Destroy(CountText2, 0.5f);
+        }
+
+
+        if (totaltime <= 10.0f && totaltime >= 5.0f)
+        {
+            timeText.color = Color.red; // 5秒以上10秒以下の間、timeTextの色を赤くする
         }
     }
     
