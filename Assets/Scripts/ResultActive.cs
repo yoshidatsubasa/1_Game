@@ -47,6 +47,7 @@ public class ResultActive : MonoBehaviour
             coinCount = Coincounter.getscore();
             
 
+
             // ポイント
             // Ballの動きを司るスクリプトをオフにする。
             ball = collision.gameObject.GetComponent<PlayerController>();
