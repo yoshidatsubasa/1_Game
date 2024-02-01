@@ -360,6 +360,7 @@ public class PlayerController : MonoBehaviour
             jampFlag = false;
         }
 
+
         if (collision.gameObject.CompareTag("Cube 3"))
         {
             jampFlag = false;
