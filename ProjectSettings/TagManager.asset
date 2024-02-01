@@ -17,6 +17,9 @@ TagManager:
   - floor
   - Red
   - Time
+  - Wall
+  - Bullet
+  - Checkpoint
   layers:
   - Default
   - TransparentFX

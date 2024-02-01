@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/TitleScene.unity
     guid: 007bc2858676a8943bac0a4fdf55702a
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/Level1.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
     path: Assets/Scenes/Level2.unity
@@ -18,15 +18,24 @@ EditorBuildSettings:
     path: Assets/Scenes/Level3.unity
     guid: 699b08e7bf82da8449a74d957f666a17
   - enabled: 1
-    path: Assets/Scenes/Result.unity
+    path: Assets/Scenes/Over.unity
     guid: 7e074f15bca69804ca5170416f850af2
   - enabled: 1
-    path: Assets/Scenes/OverScene.unity
+    path: Assets/Scenes/Clear.unity
     guid: 8dc072611fc65c04ab6c687aa1b69b0d
   - enabled: 1
-    path: Assets/Scenes/ClearScene.unity
+    path: Assets/Scenes/Option.unity
     guid: 132194e1c10ce3b44a3ee55c9814647b
   - enabled: 1
     path: Assets/Scenes/Select.unity
     guid: 3c1625dfd2fba9b469228293071b4aa8
+  - enabled: 1
+    path: Assets/Scenes/PlayMove.unity
+    guid: 97186639fae0e6b42a4a294f9419455d
+  - enabled: 1
+    path: Assets/Scenes/PlayMove2.unity
+    guid: bd7eb00307e3ea249a8108c31ce3638c
+  - enabled: 1
+    path: Assets/Scenes/Rule.unity
+    guid: 252aa467e5275264aab80b6d451010da
   m_configObjects: {}
