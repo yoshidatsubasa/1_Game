@@ -358,7 +358,6 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Cube 2"))
         {
             jampFlag = false;
-
         }
 
         if (collision.gameObject.CompareTag("Cube 3"))
