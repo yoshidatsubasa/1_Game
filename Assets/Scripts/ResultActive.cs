@@ -15,8 +15,8 @@ public class ResultActive : MonoBehaviour
     public GameObject resultButtan;
     int stageCoinNum;
     int coinCount;
-   
 
+   
 
     [SerializeField]
     GameObject clearUI;
@@ -29,6 +29,11 @@ public class ResultActive : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
 
     private Pause pauseScript; // Pauseスクリプトへの参照
+
+    public GameObject setumeiWindow; //  RadarSetumeiWindowで設定されたUI
+    public GameObject setumeiWindow2; // RadarSetumeiWindowで設定されたUI
+    public GameObject setumeiWindow3; // RadarSetumeiWindowで設定されたUI
+    public GameObject setumeiWindow4; // RadarSetumeiWindowで設定されたUI
 
 
     void Start()
@@ -75,6 +80,24 @@ public class ResultActive : MonoBehaviour
 
             pauseScript.GameOver();
 
+            // ゴールに触れたときにRadarSetumeiWindowのsetumeiWindowを非表示にする
+            if (setumeiWindow != null)
+            {
+                setumeiWindow.SetActive(false);
+            }
+            if (setumeiWindow2 != null)
+            {
+                setumeiWindow2.SetActive(false);
+            }
+            if (setumeiWindow3 != null)
+            {
+                setumeiWindow3.SetActive(false);
+            }
+            if (setumeiWindow4 != null)
+            {
+                setumeiWindow4.SetActive(false);
+            }
+
         }
 
 
@@ -113,6 +136,14 @@ public class ResultActive : MonoBehaviour
     void Update()
     {
         coinNumText.text = coinCount.ToString();
-    }
+
+        if (Input.GetButton("BButton"))
+        {
+            setumeiWindow.SetActive(false);
+            setumeiWindow2.SetActive(false);
+            setumeiWindow3.SetActive(false);
+            setumeiWindow4.SetActive(false);
+        }
+     }
 
 }

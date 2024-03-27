@@ -25,7 +25,13 @@ public class Goal2 : MonoBehaviour
     //[SerializeField] Font customFont; //カスタムフォント
 
     private Pause pauseScript; // Pauseスクリプトへの参照
-   
+
+    public GameObject setumeiWindow; // RadarSetumeiWindowで設定されたUI
+    public GameObject setumeiWindow2; // RadarSetumeiWindowで設定されたUI
+    public GameObject setumeiWindow3; // RadarSetumeiWindowで設定されたUI
+    public GameObject setumeiWindow4; // RadarSetumeiWindowで設定されたUI
+
+
     void Start()
     {
         // ステージ内のコインの枚数を取得
@@ -70,6 +76,24 @@ public class Goal2 : MonoBehaviour
             resultCoinText.text = coinCount.ToString().PadLeft(3) + "/" + stageCoinNum;
 
             pauseScript.GameOver();
+
+            // ゴールに触れたときにRadarSetumeiWindowのsetumeiWindowを非表示にする
+            if (setumeiWindow != null)
+            {
+                setumeiWindow.SetActive(false);
+            }
+            if (setumeiWindow2 != null)
+            {
+                setumeiWindow2.SetActive(false);
+            }
+            if (setumeiWindow3 != null)
+            {
+                setumeiWindow3.SetActive(false);
+            }
+            if (setumeiWindow4 != null)
+            {
+                setumeiWindow4.SetActive(false);
+            }
         }
 
     }
@@ -100,6 +124,14 @@ public class Goal2 : MonoBehaviour
     {
        
         coinNumText.text = coinCount.ToString();
+
+        if (Input.GetButton("BButton"))
+        {
+            setumeiWindow.SetActive(false);
+            setumeiWindow2.SetActive(false);
+            setumeiWindow3.SetActive(false);
+            setumeiWindow4.SetActive(false);
+        }
     }
 
 }

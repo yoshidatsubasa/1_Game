@@ -20,6 +20,7 @@ TagManager:
   - Wall
   - Bullet
   - Checkpoint
+  - Warp
   layers:
   - Default
   - TransparentFX

@@ -11,7 +11,7 @@ public class Camera : MonoBehaviour
     void Start()
     {
 
-        //unitychan‚Ìî•ñ‚ğæ“¾
+        //player‚Ìî•ñ‚ğæ“¾
         this.player = GameObject.Find("Player");
 
         // MainCamera(©•ª©g)‚Æplayer‚Æ‚Ì‘Š‘Î‹——£‚ğ‹‚ß‚é

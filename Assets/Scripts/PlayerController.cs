@@ -62,9 +62,15 @@ public class PlayerController : MonoBehaviour
 
     public Image playerImage; // Imageコンポーネントを持つオブジェクト
 
-
+    public GameObject setumeiWindow;  //ブーストカウント説明Window
+    private bool isFirstBoostCount = true; // 初回のブーストカウントかどうかを示すフラグ
 
     private Coroutine uiFlickerCoroutine; // UI点滅コルーチンの参照
+
+    // パーティクルエフェクトを格納する変数
+    private ParticleSystem boostParticleSystem;
+
+    [SerializeField] private GameObject boostParticleEffect; // Boostパーティクルエフェクトの参照
 
     void Start()
     {
@@ -120,7 +126,10 @@ public class PlayerController : MonoBehaviour
         //    rigidbody.velocity = Vector3.up * jumppower;
         //    jampFlag = true;
         //}
-
+        //if (controller.isGrounded) // 地面に接触している場合のみ水平方向の力を加える
+        //{
+        //    rigidbody.AddForce(Vector3.right * horizontalMovement * power * Time.deltaTime);
+        //}
 
         //-------------------------------------------------------------------
         //// Xboxコントローラーのボタンに対応させる
@@ -144,9 +153,12 @@ public class PlayerController : MonoBehaviour
 
             source2.PlayOneShot(clip2);
         }
-
-        //----------------------------------------------------------------------------------
-        float horizontalMovement2 = Input.GetAxis("Horizontal2");
+        if (Input.GetButton("BButton"))
+        {
+            setumeiWindow.SetActive(false);
+        }
+            //----------------------------------------------------------------------------------
+            float horizontalMovement2 = Input.GetAxis("Horizontal2");
 
         // 左右の入力を受け取る
         if (horizontalMovement2 > 0 && !isInputActive2 && !isRightPressed)
@@ -188,8 +200,14 @@ public class PlayerController : MonoBehaviour
        
         coinCount = Coincounter.getscore();
 
-        if (coinCount > 0 && coinCount % 10 == 0 && boostCount < coinCount / 10) // 10の倍数かつスピードアップ中でない場合
+        if (coinCount > 0 && coinCount % 10 == 0 && boostCount < coinCount / 10 ) // 10の倍数かつスピードアップ中でない場合
         {
+            if (isFirstBoostCount) // 初回のブーストカウントの場合
+            {
+                isFirstBoostCount = false; // 初回のブーストカウントではなくなったのでフラグを更新
+                StartCoroutine(ShowNewUIAfterDelay(1f));   // 1秒後に新しいUIを表示する
+                StartCoroutine(HideNewUIAfterDelay(9f));   // 9秒後に新しいUIを非表示にする
+            }
             // 10の倍数かつスピードアップ中でない場合
             // ブーストカウントを増やす
             boostCount = coinCount / 10;
@@ -203,8 +221,10 @@ public class PlayerController : MonoBehaviour
             // スピードアップを開始する
             StartCoroutine(SpeedUpRoutine());
             boostUI.SetActive(true);
+            setumeiWindow.SetActive(false);
             boostsUsed++;
             UpdateBoostCountText(); // ブースト使用後にUIテキストを更新
+
         }
         if (slider.value<=0)
         {
@@ -233,9 +253,26 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator SpeedUpRoutine()
     {
-        power = 650;
+        power = 700;
         GameObject trailObject = GameObject.Find("Player");
         TrailRenderer trailRenderer = trailObject.GetComponent<TrailRenderer>();
+
+        if (boostParticleEffect != null)
+        {
+            boostParticleSystem = boostParticleEffect.GetComponent<ParticleSystem>(); // BoostパーティクルエフェクトのParticleSystemコンポーネントを取得
+            if (boostParticleSystem != null)
+            {
+                boostParticleSystem.Play(); // パーティクルエフェクトを再生する
+            }
+            else
+            {
+                Debug.LogError("Boost particle effect component not found!"); // パーティクルエフェクトのParticleSystemコンポーネントが見つからない場合はエラーを出力
+            }
+        }
+        else
+        {
+            Debug.LogError("Boost particle effect not assigned!"); // Boostパーティクルエフェクトが割り当てられていない場合はエラーを出力
+        }
 
         // TrailRendererがnullでないことを確認して色を変更する
         if (trailRenderer != null)
@@ -250,12 +287,20 @@ public class PlayerController : MonoBehaviour
             source3.PlayOneShot(clip3);
         }
 
+       
         // スピードアップ時に無敵状態にする
         isInvincible = true;
         yield return new WaitForSeconds(5.0f);
 
-        power = 300; // スピードアップ終了時に速度を元に戻す
+     
+        power = 400; // スピードアップ終了時に速度を元に戻す
+
+        if (boostParticleSystem != null)
+        {
+            boostParticleSystem.Stop(); // パーティクルエフェクトを停止する
+        }
         boostUI.SetActive(false);
+      
         // 元の色に戻す
         if (trailRenderer != null)
         {
@@ -328,6 +373,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //UiWindow表示
+    IEnumerator ShowNewUIAfterDelay(float delay)
+    {
+        
+        yield return new WaitForSeconds(delay);
+        setumeiWindow.SetActive(true);
+    }
+
+    //UiWindow非表示
+    IEnumerator HideNewUIAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        setumeiWindow.SetActive(false);
+    }
+
+   
+    // スピードが元に戻ったときにパーティクルエフェクトを非表示にするコルーチン
+  
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.CompareTag("Stage Load 1"))
@@ -387,6 +450,13 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void StopMovement()
+    {
+        // Rigidbody の速度をゼロに設定
+        rigidbody.velocity = Vector3.zero;
+        rigidbody.angularVelocity = Vector3.zero; // 必要に応じて、角速度もゼロに設定
     }
 
     private System.Collections.IEnumerator DelayedSliderDecrease(int damage)
