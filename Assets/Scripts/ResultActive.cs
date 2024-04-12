@@ -36,6 +36,8 @@ public class ResultActive : MonoBehaviour
     public GameObject setumeiWindow4; // RadarSetumeiWindow�Őݒ肳�ꂽUI
 
 
+
+
     void Start()
     {
         //resultButtan.SetActive(false);

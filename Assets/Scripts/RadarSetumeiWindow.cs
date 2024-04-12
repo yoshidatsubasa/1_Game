@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class RadarSetumeiWindow : MonoBehaviour
 {
+
     public GameObject setumeiWindow1; // シーン1用のUI
     public GameObject setumeiWindow2; // シーン2用のUI
     public GameObject setumeiWindow3; // シーン3用のUI
@@ -38,6 +39,14 @@ public class RadarSetumeiWindow : MonoBehaviour
         {
             StartCoroutine(ShowNewUIAfterDelay(1f, 3));   // 1秒後にシーン3のUIを表示する
             StartCoroutine(HideNewUIAfterDelay(9f, 3));   // 9秒後にシーン3のUIを非表示にする
+        }
+
+        if (Input.GetButton("BButton"))
+        {
+            setumeiWindow1.SetActive(false);
+            setumeiWindow2.SetActive(false);
+            setumeiWindow3.SetActive(false);
+          
         }
     }
 

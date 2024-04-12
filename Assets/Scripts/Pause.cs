@@ -14,6 +14,7 @@ public class Pause : MonoBehaviour
     [SerializeField] private GameObject menuicon;
     [SerializeField] private GameObject sound;
     [SerializeField] private GameObject soundMute;
+    [SerializeField] private AudioSource[] audioSources;
     private bool isPaused = false;
     private bool isGameOver = false;
 
@@ -60,6 +61,12 @@ public class Pause : MonoBehaviour
             menuicon.SetActive(true);
             sound.SetActive(true);
             soundMute.SetActive(true);
+
+            // サウンドを停止する
+            foreach (AudioSource audioSource in audioSources)
+            {
+                audioSource.Pause();
+            }
         }
     }
 
@@ -74,6 +81,12 @@ public class Pause : MonoBehaviour
         menuicon.SetActive(false);
         sound.SetActive(false);
         soundMute.SetActive(false);
+
+        // サウンドを再開する
+        foreach (AudioSource audioSource in audioSources)
+        {
+            audioSource.UnPause();
+        }
     }
 
     // ゲームが終了した後に呼ばれる関数（ゴール時など）

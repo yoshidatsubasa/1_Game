@@ -72,6 +72,12 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private GameObject boostParticleEffect; // Boostパーティクルエフェクトの参照
 
+    private bool isTakingDamage = false; // ダメージを受けているかどうかを示すフラグ
+ 
+   
+    // 前回ダメージを受けたオブジェクトを追跡する変数
+    private GameObject lastDamageSource;
+
     void Start()
     {
         // CharacterControllerを取得
@@ -93,13 +99,13 @@ public class PlayerController : MonoBehaviour
         // HPが1以下になったら他のUIを点滅させる
         if (slider.value <= 1 && uiFlickerCoroutine == null)
         {
-           
-
             if (playerImage != null)
             {
                 StartCoroutine(FlickerPlayerImage()); // Imageを点滅させるコルーチンを開始
             }
         }
+
+
     }
 
    
@@ -163,7 +169,8 @@ public class PlayerController : MonoBehaviour
         // 左右の入力を受け取る
         if (horizontalMovement2 > 0 && !isInputActive2 && !isRightPressed)
         {
-           
+            // 左方向に移動中なので、プレイヤーの正面を左向きにする
+            transform.rotation = Quaternion.Euler(0, 90, 0);
             ApplyForceAndChangeImage(Vector3.left, rightImage, leftImage);
 
             isLeftPressed = false;
@@ -171,6 +178,8 @@ public class PlayerController : MonoBehaviour
         }
         else if (horizontalMovement2 < 0 && !isInputActive2 && !isLeftPressed)
         {
+            // 左方向に移動中なので、プレイヤーの正面を左向きにする
+            transform.rotation = Quaternion.Euler(0, -90, 0);
             ApplyForceAndChangeImage(Vector3.right, leftImage, rightImage);
             isLeftPressed = true;
             isRightPressed = false;
@@ -387,9 +396,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(delay);
         setumeiWindow.SetActive(false);
     }
-
-   
-    // スピードが元に戻ったときにパーティクルエフェクトを非表示にするコルーチン
   
     private void OnCollisionEnter(Collision collision)
     {
@@ -457,6 +463,62 @@ public class PlayerController : MonoBehaviour
         // Rigidbody の速度をゼロに設定
         rigidbody.velocity = Vector3.zero;
         rigidbody.angularVelocity = Vector3.zero; // 必要に応じて、角速度もゼロに設定
+    }
+    // プレイヤーにダメージを与えるメソッド
+    public void TakeDamage(int lazerdamage)
+    {
+        // プレイヤーが無敵状態でない場合のみダメージを適用する
+        if (!isInvincible)
+        {
+            // プレイヤーがダメージを受けていないか、前回ダメージを受けたオブジェクトとは異なるオブジェクトからダメージを受けた場合
+            if (!isTakingDamage || lastDamageSource != gameObject)
+            {
+                // 1回に受けるダメージを1に制限する
+                lazerdamage = Mathf.Min(lazerdamage, 1);
+
+
+                // slider の値を減少させる
+                slider.value -= lazerdamage;
+
+                StartCoroutine(DelayedSliderDecrease(lazerdamage));  //遅れて減少 
+
+                PlayerEffect flickerScript = GetComponent<PlayerEffect>();
+                if (flickerScript != null)
+                {
+                    flickerScript.StartFlicker();
+                }
+
+                source1.PlayOneShot(clip1);
+
+                // ダメージを受けたフラグを立てる
+                isTakingDamage = true;
+
+                // 前回ダメージを受けたオブジェクトを更新する
+                lastDamageSource = gameObject;
+            }
+        }
+    }
+
+    // プレイヤーがオブジェクトから離れた時の処理
+    private void OnTriggerExit(Collider other)
+    {
+        // ダメージを受けたフラグをリセットする
+        isTakingDamage = false;
+        // 前回ダメージを受けたオブジェクトをリセットする
+        lastDamageSource = null;
+    }
+
+    // プレイヤーの動きを停止するメソッド
+    public void StopMovement2()
+    {
+        // プレイヤーの動きを停止する処理をここに記述する
+        // 例えば、以下のように Rigidbody の速度をゼロにすることができます
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
     }
 
     private System.Collections.IEnumerator DelayedSliderDecrease(int damage)

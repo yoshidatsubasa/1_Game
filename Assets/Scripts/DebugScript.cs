@@ -11,11 +11,23 @@ public class DebugScript : MonoBehaviour
     public AudioSource returnSound;
     public static float gameStartTime = 0f;
 
+   
+    [SerializeField] private Slider _slider;
+
+    [SerializeField] private GameObject _loadingUI;
     IEnumerator LoadSceneAfterDelay(string nextScene)
     {
+      
         yield return new WaitForSeconds(delayTime); // 指定した時間だけ待機する
-        SceneManager.LoadScene(nextScene); // 指定したシーンに遷移する
+       //SceneManager.LoadScene(nextScene); // 指定したシーンに遷移する
+        AsyncOperation async = SceneManager.LoadSceneAsync(nextScene);
+        while (!async.isDone)
+        {
+            _slider.value = async.progress;
+            yield return null;
+        }
     }
+
     public void ChangeScene(string nextScene)
     {
         StartCoroutine(LoadSceneAfterDelay(nextScene)); // コルーチンを開始してシーン遷移を行う
@@ -47,6 +59,7 @@ public class DebugScript : MonoBehaviour
 
     public void ChangeScene5(string nextScene)
     {
+        _loadingUI.SetActive(true);
         StartCoroutine(LoadSceneAfterDelay(nextScene)); // コルーチンを開始してシーン遷移を行う
         Time.timeScale = 1;
         Coincounter.coinCount = 0;
@@ -57,7 +70,6 @@ public class DebugScript : MonoBehaviour
     public void ChangeScene6(string nextScene)
     {
         StartCoroutine(LoadSceneAfterDelay(nextScene));
-
         Time.timeScale = 1;
     }
     public void SceneReset()
@@ -121,12 +133,12 @@ public class DebugScript : MonoBehaviour
             }
         }
 
-        if (Input.GetKey(KeyCode.Q))
-          {
-            SceneManager.LoadScene("Level2");
-            Time.timeScale = 1;
-            Coincounter.coinCount = 0;
-          }
+        //if (Input.GetKey(KeyCode.Q))
+        //  {
+        //    SceneManager.LoadScene("Level2");
+        //    Time.timeScale = 1;
+        //    Coincounter.coinCount = 0;
+        //  }
       
 
     }

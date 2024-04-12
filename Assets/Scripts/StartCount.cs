@@ -24,6 +24,12 @@ public class StartCount : MonoBehaviour
     public AudioSource source; // 効果音用のAudioSource
     public AudioClip countdownClip; // カウントダウン効果音のAudioClip
 
+    public AudioSource source1;
+    public AudioClip clip1;
+
+    public AudioSource source2;
+    public AudioClip clip2;
+
     bool startBGM = false; // BGMを再生するフラグ
     bool countdownStarted = false; // カウントダウンが開始されたかどうかのフラグ
 
@@ -39,6 +45,8 @@ public class StartCount : MonoBehaviour
 
     public GameObject playerGameObject; // プレイヤーオブジェクト
     private PlayerController playerController; // プレイヤーコントローラー
+
+    bool playedCountdownSound = false; // カウントダウン効果音を再生したかどうかのフラグ
     void Start()
     {
         // 初期化時に11秒前のオブジェクトを非アクティブにする
@@ -83,12 +91,26 @@ public class StartCount : MonoBehaviour
             timeText.text = retTime.ToString("f1");
             if(retTime<= 0 && !goalReached)
             {
-                StartCoroutine(LoadSceneAfterDelay("Over", 1f)); // 1秒後にゴールシーンをロード
+                StartCoroutine(LoadSceneAfterDelay("Over", 2f)); // 2秒後にゴールシーンをロード
             }
-            else if (retTime <= 1 && !goalReached)
+            else if (retTime <= 0.5 && !goalReached)
             {
                 TimeUpWindow.SetActive(true);
-               
+            }
+            else if (retTime <= 2 && !goalReached)
+            {
+                source1.Play();
+            }
+
+            // 10秒前のオブジェクトを表示する際に一度だけ効果音を再生する
+            if (totaltime<=10.8f && !playedCountdownSound)
+            {
+                // カウントダウンの効果音を再生する
+                if (clip2 != null)
+                {
+                    source2.PlayOneShot(clip2);
+                    playedCountdownSound = true; // カウントダウン効果音を再生した
+                }
             }
 
         }
@@ -110,7 +132,6 @@ public class StartCount : MonoBehaviour
         if (totaltime <= 10.0f && totaltime >= 5.0f)
         {
             timeText.color = Color.red; // 5秒以上10秒以下の間、timeTextの色を赤くする
-           
         }
         // カウントダウンオブジェクトの表示を設定する
         if (totaltime <= 11 && totaltime >= 1)
@@ -134,11 +155,17 @@ public class StartCount : MonoBehaviour
         // タイムアップウィンドウが表示された場合、プレイヤーの動きを停止する
         if (TimeUpWindow.activeSelf)
         {
+           
             // プレイヤーコントローラーがnullでないことを確認してから、動きを停止する
             if (playerController != null)
             {
                 playerController.StopMovement(); // プレイヤーの動きを停止するメソッドを呼び出す
             }
+
+            setumeiWindow.SetActive(false);
+            setumeiWindow2.SetActive(false);
+            setumeiWindow3.SetActive(false);
+            setumeiWindow4.SetActive(false);
         }
     }
 

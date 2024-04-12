@@ -21,6 +21,7 @@ TagManager:
   - Bullet
   - Checkpoint
   - Warp
+  - Lazercollider
   layers:
   - Default
   - TransparentFX
